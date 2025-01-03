@@ -179,8 +179,8 @@ function main() {
     build_e2fsprogs # Build BEFORE bash!
     build_coreutils
     build_bash
+
     # Package into unified tarball
-pause
     package_unified_system
 
     # Clean up the staging directory
