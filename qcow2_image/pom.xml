@@ -1,0 +1,187 @@
+<!--
+  ~ Copyright (c) 2024.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.starship</groupId>
+        <artifactId>starship-os</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>qcow2_image</artifactId>
+    <packaging>pom</packaging>
+
+    <name>cow2_image</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.starship</groupId>
+            <artifactId>init</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin to run custom tasks -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <!-- Execution for unpacking -->
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <!--                                <artifactItem>-->
+                                <!--                                    <groupId>org.starship</groupId>-->
+                                <!--                                    <artifactId>initramfs</artifactId>-->
+                                <!--                                    <version>0.1.0-SNAPSHOT</version>-->
+                                <!--                                    <classifier>initramfs</classifier>-->
+                                <!--                                    <type>tgz</type>-->
+                                <!--                                    <outputDirectory>${project.build.directory}/ramdisks</outputDirectory>-->
+                                <!--                                </artifactItem>-->
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>kernel</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <classifier>kernel</classifier>
+                                    <type>tgz</type>
+                                    <outputDirectory>${project.build.directory}/kernel</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>java</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <classifier>java</classifier>
+                                    <type>tgz</type>
+                                    <outputDirectory>${project.build.directory}/java</outputDirectory>
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>init-bundle-manager</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>init-bundle-manager</classifier>
+                                    <outputDirectory>./target/init-bundle-manager</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>gnu-tools-glibc</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>gnu-tools-glibc</classifier>
+                                    <outputDirectory>./target/gnu-tools-glibc</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>init</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <classifier>init</classifier>
+                                    <type>tgz</type>
+                                    <outputDirectory>${project.build.directory}/init</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>build-hdd-img</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>scripts/build.sh</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean-qcow2_image</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>scripts/clean.sh</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Assemble -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>package-qcow2</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>qcow2.xml</descriptor>
+                            </descriptors>
+                            <formats>
+                                <format>tgz</format>
+                            </formats>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Attach -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifact</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>./target/${project.artifactId}-${project.version}-qcow2.tgz</file>
+                                    <type>tgz</type>
+                                    <classifier>qcow2</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

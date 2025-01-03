@@ -1,0 +1,5 @@
+/.idea/
+/module.log
+/build.log
+/kernel/build/
+/kernel/module.log
