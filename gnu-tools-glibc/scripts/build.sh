@@ -85,15 +85,15 @@ function cleanup() {
 
 ### Build Functions ###
 function build_glibc() {
-    log "Building glibc..."
-log "Building glibc..."
+  log "********************************************************************************"
+  log "*                               Building glibc ...                             *"
+  log "********************************************************************************"
 
     # Step 1: Install Kernel Headers (Ensure headers are prepared beforehand)
 #    KERNEL_HEADERS_DIR="build/kernel-headers"
 #    mkdir -p "$KERNEL_HEADERS_DIR"
 #    cd /path/to/linux-source
 #    make headers_install INSTALL_HDR_PATH="$KERNEL_HEADERS_DIR"
-pause
     mkdir -p /tmp/build
     cd /tmp/build
     wget http://ftp.gnu.org/gnu/libc/glibc-2.31.tar.gz
@@ -110,7 +110,9 @@ pause
 }
 
 function build_e2fsprogs() {
-    log "Building e2fsprogs..."
+    log "********************************************************************************"
+    log "*                             Building e2fsprogs ...                           *"
+    log "********************************************************************************"
 
     mkdir -p /tmp/build
     cd /tmp/build
@@ -126,7 +128,9 @@ function build_e2fsprogs() {
 }
 
 function build_coreutils() {
-    log "Building coreutils..."
+    log "********************************************************************************"
+    log "*                            Building coreutils ...                            *"
+    log "********************************************************************************"
 
     mkdir -p /tmp/build
     cd /tmp/build
@@ -142,7 +146,9 @@ function build_coreutils() {
 }
 
 function build_bash() {
-    log "Building bash..."
+    log "********************************************************************************"
+    log "*                          Building bash ...                                   *"
+    log "********************************************************************************"
 
     mkdir -p /tmp/build
     cd /tmp/build
@@ -158,7 +164,9 @@ function build_bash() {
 }
 
 function build_util_linux() {
-    log "Building util-linux..."
+    log "********************************************************************************"
+    log "*                       Building util-linux ...                                *"
+    log "********************************************************************************"
 
     mkdir -p /tmp/build
     cd /tmp/build
@@ -177,14 +185,14 @@ function build_util_linux() {
 function main() {
     # Early Exit Condition: Check if /tmp/build already exists
     if [ ! -d "build" ]; then
-    log "Preparing unified build environment..."
+    log "Preparing build environment..."
     mkdir -p /tmp/staging  # Always create the staging directory
 
     # Build all packages and install into a unified directory
-    build_util_linux
     build_glibc
-    build_e2fsprogs # Build BEFORE bash!
+    build_util_linux
     build_coreutils
+    build_e2fsprogs # Build BEFORE bash!
     build_bash
 
     # Package into unified tarball

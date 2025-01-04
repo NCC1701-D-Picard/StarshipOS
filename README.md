@@ -1,164 +1,170 @@
 ![StarshipOS](StarshipOS.png)
 
-## [A Vision for Empowerment](doc/vision.md)
+# Starship Operating System (StarshipOS)
 
-The **Starship Operating System** project is not just about technological innovation, but also about transformative
-impact. With a strong belief in the untapped potential within the prison system, this project aspires to serve as an
-educational platform, providing inmates with access to valuable programming skills. This endeavor recognizes the
-importance of offering incarcerated individuals constructive outlets and opportunities to rebuild their lives. By
-teaching modern software development skills within a supportive environment, StarshipOS seeks to empower those who often
-feel voiceless, fostering rehabilitation and creating pathways to meaningful employment after release. This vision
-underscores a commitment to harnessing talent, encouraging change, and, ultimately, leaving a meaningful mark on the
-world.# Starship Operating System (StarshipOS). 
-
-Welcome to the repository for **Starship Operating System**! This project aims to revolutionize traditional operating 
-systems by integrating principles of object-oriented programming (OOP) deeply into the OS architecture, offering a 
-modern way to manage files and memory.
+Welcome to **Starship Operating System (StarshipOS)**! This project reimagines what an operating system can be—combining deep object-oriented principles with cutting-edge innovations in virtual memory management, unique process orchestration, and immersive user interaction. StarshipOS is not just an operating system; it’s a framework for a **new way of thinking**, focusing on flexibility, modularity, and empowering its users to build their "universe."
 
 ## Table of Contents
 
-- [A Different Way of Thinking](DIFFERENT_WAY.md)
-- [For developers, very important!](IMPORTANT-README.md)
+- [A Vision for Empowerment](#a-vision-for-empowerment)
 - [Project Vision](#project-vision)
 - [Key Features](#key-features)
-- [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Technical Details](#technical-details)
 - [Contributing](#contributing)
 - [License](#license)
 
+---
+
+## A Vision for Empowerment
+
+The **Starship Operating System** project is grounded not just in technological innovation but also in its potential for **transformative societal impact**. By providing a platform for education and skill-building in programming, **StarshipOS** aims to empower underserved communities—particularly those within the prison system. Teaching modern software development skills fosters rehabilitation and creates pathways to meaningful employment after release. This system is built for empowerment, growth, and creating new opportunities for all.
+
+---
+
 ## Project Vision
 
-Our vision is to create a state-of-the-art Operating System where every component, from files to memory management,
-adheres to object-oriented principles. The OS will support running Java applications directly and provide an 
-environment where `jshell` can be used interactively as early as possible during the boot process. Ultimately, 
-the goal is to develop an object-oriented filesystem that utilizes virtual memory for enhanced performance 
-and persistence.
+We aim to create an operating system where every component is designed with **object-oriented principles** and tailored for **dynamic process orchestration**. StarshipOS redefines traditional OS architecture, ditching window managers, embracing virtual memory as the foundation, and prioritizing **file-agnostic object persistence**.
+
+Envision a system where:
+
+- The boot process ("Inflation Period") seamlessly hands off control to a **Groovy-based init system** using a DSL to fully manage initialization tasks.
+- Processes are dynamically orchestrated via an **IPC-aware event bus** (instead of just thread management).
+- The in-memory objects and lifecycle are governed by probabilistic models like **ANOVA** and **Bayesian inference**, building a computational "Standard Model" akin to physics.
+- Users interact via a **JavaFX-powered 3D POV GUI** with direct framebuffer access to eliminate unnecessary layering, enabling a futuristic, immersive experience.
+
+The result? A system designed to **expand human and machine creativity** while focusing on performance, modularity, and empowerment.
+
+---
 
 ## Key Features
 
-- **Object-Oriented Filesystem**: Introducing a filesystem where every file and directory is represented as an
-- object, making the system more modular, flexible, and extensible.
-- **Virtual Memory Management**: Treating mass storage as virtual memory to efficiently handle active and dormant objects.
-- **Java Integration**: Full support for Java runtime, enabling the use of `jshell` for dynamic scripting and interaction.
-- **Persistence Control**: Implement mechanisms to flag specific objects for persistence, ensuring important data is always saved.
+- **Groovy-DSL Init System**: A fully compiled init system, defined with a domain-specific language (DSL) to orchestrate the OS's initialization phase, handing off control to a **BundleManager**.
+- **Dynamic Process Orchestration**: Processes—**not threads**—are brought in and out of existence dynamically using an **IPC-aware event bus and loop**.
+- **Apache Felix Bundles**: StarshipOS tightly integrates with **Felix OSGi bundles**, enabling runtime dependency management and modular applications.
+- **Virtualized Memory Model**: A custom swap partition for heaping Java instances treats memory as a dynamic, **file-agnostic, object-oriented structure**. Persistence is managed probabilistically via entropy models.
+- **Cosmic Design Principles**: StarshipOS models runtime behaviors on modern physics concepts, including the "Big Bang" (booting/inflation) and "Standard Model" analogs—objects as particles, messaging as forces.
+- **JavaFX 3D GUI**: A **direct framebuffer-access-based GUI**, bypassing traditional window managers to deliver a **point-of-view immersive interface**.
+- **Interactive Java Shell**: As early as boot, the system launches `jshell` or `other` for interactive scripting and exploration.
 
-## Project Structure
-
-```
-StarshipOS/
-├── busybox
-│ ├── busybox
-│ └── scripts
-├── grub
-│ └── scripts
-├── initramfs
-│ └── scripts
-├── java
-│ ├── jdk
-│ └── scripts
-├── live_cd
-│ └── scripts
-├── qcow2_image
-│ ├── build
-│ └── scripts
-├── scripts
-├── starship
-│ ├── scripts
-│ └── starship_kernel
-├── starship-sdk
-│ ├── scripts
-│ └── src
-├── system-bridge
-│ ├── scripts
-│ └── src
-└── userland-java
-    ├── scripts
-    └── src
-```
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- ``**sudo**`` ***is required!***
-- **Build Environment**: Ensure you have a Linux build environment with necessary tools such as GCC, Make, etc.
-- **Java Development Kit (JDK)**: Download and compile the source for Java JDK (version 23 as default).
+- **sudo** is required to build and run the system.
+- A Linux build environment with tools such as **GCC**, **Make**, and others.
 
-### Building the Project
+### Build Instructions
 
-There are scripts to aid in building **StarshipOS**
-In the root directory there is s directory called "scripts".
-```build.sh```, this is what you are looking for to build **StarshipOS**.
-Sit back and relax while it runs its course.
+To manage and build the project, utilize the `cleanbuild.sh` script in the `./bin/` directory. This script is designed to streamline the Maven build process for this multi-module project by providing flexibility with module-specific builds, cleanups, force builds, and logging.
 
-Each directory has a ``scripts``
+#### Usage and Options
 
-### Important point: when running maven, build artefacts are placed in the ``build`` 
-directory in the sub project **AND
-NOWHERE ELSE**!!! [^1]
+Run the `cleanbuild.sh` script with any of the following options:
 
-### Running `jshell`
+```bash
+./bin/cleanbuild.sh [OPTIONS]
+```
 
-Upon booting, the `init` script will set up the environment be launch `jshell`. This provides an interactive Java
-environment immediately after the OS boots.
-*(As of today, this does not happen yet.)*
+**Available Options:**
 
-## Technical Details
+- **`-h` or `--help`**  
+  Displays the help menu with detailed usage instructions.
 
-We will spin **StarshipOS** from the initial linux kernel. **Busybox** will be available should ```jshell``` not start.
+- **`-l` or `--logfile FILE`**  
+  Specify a log file (default: `build.log`).
 
-1) **busybox** provides for different configurations. ``defconfig`` provides for just about everything but the kitchen
-   sink.
-   1) **busybox** may be reconfigured as needed using the Makefile in the busybox root directory (see ```make help```).
+- **`--uber-clean`**  
+  Removes `build` directories for all modules and forces a full rebuild.
 
-2) **grub** simply is a container to hold the ```grub.cfg``` file.
-   1) **grub** fun fact: NO SHELL SCRIPT! The resources plugin takes care of that.
+- **`--debug`**  
+  Enables debug output (`mvn -X` targets) and introduces debug breakpoints for deeper inspection during the build process.
 
-3) **initramfs** is where the ram disk is assembled.
-   1) Look into the shell script for details.
-4) **java** This is where the Java23 JDK is built.
-   1) This JDK build is a minimal build with ``compiler1, compiler2 & zgc`` as the garbage collector.
-   2) As with any of these modules you can reconfigure the java build.
-5) **live_cd** is where the ISO image is built.
-6) **starship** is the linux kernel we will rely on for hardware interaction and housekeeping.
-   1) Again, this is a minimal build of the linux kernel and will probably be reconfigured as the project moves along.
-### Object-Oriented Filesystem
+- **`--clean MODULE`**  
+  Removes the `build` directory for a specific module. This forces its rebuild during the next build.
 
-The filesystem treats each file and directory as an instance of a `PersistentObject`. Objects are cached in virtual 
-memory for quick access and persisted to storage as needed based on their flags:
+- **`--force MODULE`**  
+  Removes the `build` directory of the specified module and rebuilds it *immediately* (without rebuilding other modules).
 
-## Contributing
+#### Examples
 
-We welcome contributions from everyone! Here’s how you can help:
+- **Perform a standard build:**  
+  This command builds the project, only cleaning and rebuilding modules needing it, including always-rebuilt modules (e.g., `grub`, `initramfs`, `qcow2_image`).
 
-1. Fork the repository and create your branch from `main`.
-2. If you’ve added code that should be tested, add tests.
-3. Create a pull request explaining the changes.
+  ```bash
+  ./bin/cleanbuild.sh
+  ```
 
-Please read our [Contributing Guidelines](docs/CONTRIBUTING.md) for more details.
+- **Force a complete rebuild (all modules):**  
+  Clean `build` directories for all modules and rebuild everything from scratch:
 
-## License
+  ```bash
+  ./bin/cleanbuild.sh --uber-clean
+  ```
 
-This project uses multiple licenses based on the component scope:
+- **Clean and rebuild a single module:**  
+  For example, to clean the `kernel` module and include it in the next build:
 
-- **GPLv2**: Applied to Linux-related files in the project.
-- **GPLv2-only**: Applied to Java files in the project.
-- **Apache License 2.0**: Applied to all other original code and files.
+  ```bash
+  ./bin/cleanbuild.sh --clean kernel
+  ```
 
-For full license details, see the following files:
+- **Force rebuild a single module immediately:**  
+  Clean and rebuild just the `qcow2_image` module right away, without building any other modules:
 
-- [LICENSE_GNU2.md](LICENSE_GNU2.md) for GPLv2.
-- [LICENSE_APACHE2.md](LICENSE_APACHE2.md) for Apache License 2.0.
+  ```bash
+  ./bin/cleanbuild.sh --force qcow2_image
+  ```
 
-SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
+- **Enable debug mode:**  
+  Run Maven with debug flags (`-X`) and include custom breakpoint functionality:
+
+  ```bash
+  ./bin/cleanbuild.sh --debug
+  ```
+
+#### Logging
+
+All build output is logged to a file (default: `build.log`). You can specify your own file using the `-l` or `--logfile` option:
+
+```bash
+./bin/cleanbuild.sh -l my_custom_logfile.log
+```
 
 ---
 
-Thank you for your interest in **My Object-Oriented Operating System**. We’re excited to push the boundaries 
-of traditional OS design and create something truly modern and innovative. If you have any questions or need 
-further assistance, feel free to reach out via our [issue tracker](https://github.com/your-repo/issues).
+## Build Philosophy
 
-Why is this so important? The module will not be built if the build directory exists.
+This script is designed to be the core of the build process for **StarshipOS**. It utilizes Maven's root-level reactor to manage dependencies and builds while ensuring:
 
-Happy Coding!
+- Specific modules, such as `qcow2_image`, are always rebuilt to maintain consistency.
+- Non-essential modules are skipped unless explicitly cleaned for optimal build performance.
+- Debugging and log tracking are provided to simplify troubleshooting during complex builds.
+
+---
+
+## Technical Details
+
+1. **Custom Init System**: Written in Groovy, consuming a DSL to initialize system components. Hands control to the `BundleManager`.
+2. **Event-Driven System Init**: IPC-aware event loop dynamically manages processes via Apache Felix and resolves dependencies on the fly.
+3. **Advanced Virtual Memory Model**: Uses JVM ZGC to manage memory entropy and swap out objects dynamically based on probabilistic models.
+4. **Point-of-View GUI**: The **JavaFX-based 3D GUI** renders directly via the framebuffer, eliminating the need for a window manager.
+
+---
+
+## Contributing
+
+We welcome contributions! Please refer to our [Contribution Guide](CONTRIBUTING.md) to get involved in developing **StarshipOS**.
+
+---
+
+## License
+
+This project is dual-licensed under the terms of the **GPLv2** and the **Apache License 2.0**. You may choose either of these licenses to comply with your use case.
+
+For GPLv2, see [LICENSE-GPLv2](LICENSE-GPLv2).  
+For Apache 2.0, see [LICENSE-APACHE](LICENSE-APACHE).
+
+---

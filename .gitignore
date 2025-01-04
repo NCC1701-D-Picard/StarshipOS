@@ -10,3 +10,5 @@
 /.config/
 /.cache/
 /qcow2_image/module.log
+/init-bundle-manager/dependency-reduced-pom.xml
+/disk_images/module.log

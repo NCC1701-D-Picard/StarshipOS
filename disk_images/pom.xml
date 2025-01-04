@@ -11,10 +11,8 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>qcow2_image</artifactId>
+    <artifactId>disk_images</artifactId>
     <packaging>pom</packaging>
-
-    <name>cow2_image</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,14 +43,6 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-                                <!--                                <artifactItem>-->
-                                <!--                                    <groupId>org.starship</groupId>-->
-                                <!--                                    <artifactId>initramfs</artifactId>-->
-                                <!--                                    <version>0.1.0-SNAPSHOT</version>-->
-                                <!--                                    <classifier>initramfs</classifier>-->
-                                <!--                                    <type>tgz</type>-->
-                                <!--                                    <outputDirectory>${project.build.directory}/ramdisks</outputDirectory>-->
-                                <!--                                </artifactItem>-->
                                 <artifactItem>
                                     <groupId>org.starship</groupId>
                                     <artifactId>kernel</artifactId>
@@ -135,53 +125,53 @@
                 </executions>
             </plugin>
             <!-- Assemble -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <id>package-qcow2</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>qcow2.xml</descriptor>
-                            </descriptors>
-                            <formats>
-                                <format>tgz</format>
-                            </formats>
-                            <finalName>${project.artifactId}-${project.version}</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                <version>3.5.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>package-qcow2</id>-->
+<!--                        <phase>prepare-package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>single</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <descriptors>-->
+<!--                                <descriptor>qcow2.xml</descriptor>-->
+<!--                            </descriptors>-->
+<!--                            <formats>-->
+<!--                                <format>tgz</format>-->
+<!--                            </formats>-->
+<!--                            <finalName>${project.artifactId}-${project.version}</finalName>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <!-- Attach -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-artifact</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>./target/${project.artifactId}-${project.version}-qcow2.tgz</file>
-                                    <type>tgz</type>
-                                    <classifier>qcow2</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>build-helper-maven-plugin</artifactId>-->
+<!--                <version>3.3.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>attach-artifact</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>attach-artifact</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <artifacts>-->
+<!--                                <artifact>-->
+<!--                                    <file>./target/${project.artifactId}-${project.version}-qcow2.tgz</file>-->
+<!--                                    <type>tgz</type>-->
+<!--                                    <classifier>qcow2</classifier>-->
+<!--                                </artifact>-->
+<!--                            </artifacts>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

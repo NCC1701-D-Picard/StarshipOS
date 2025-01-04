@@ -11,16 +11,16 @@ function log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
 
-log "QCOW2 will be 'Uber-clean'."
+log "disk_images will be 'Uber-clean'."
 if [ -d "$BUILD_DIR" ]; then
-#  rm "module.log"
   if [ -f "starship-os.raw" ]; then
-    sudo umount "build/root"
+    sudo umount "build/rootfs"
     sudo losetup -d "$(sudo losetup --find --show --partscan "build/starship-os.raw")"
 fi
-  sudo rm -rf "$BUILD_DIR/boot" "$BUILD_DIR/root"
+  sudo rm -rfv "$BUILD_DIR"
+  sudo rm -rfv "./target"
 else
   log "Nothing to do."
 fi
 
-log "QCOW2 will be rebuilt every run."
+log "disk_images will be rebuilt every run."

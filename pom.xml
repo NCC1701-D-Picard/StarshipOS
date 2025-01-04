@@ -29,7 +29,7 @@
 
         <module>init</module>
         <module>init-bundle-manager</module>
-        <module>qcow2_image</module>
+        <module>disk_images</module>
     </modules>
 
     <dependencies>
