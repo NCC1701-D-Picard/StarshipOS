@@ -86,7 +86,14 @@ function cleanup() {
 ### Build Functions ###
 function build_glibc() {
     log "Building glibc..."
+log "Building glibc..."
 
+    # Step 1: Install Kernel Headers (Ensure headers are prepared beforehand)
+#    KERNEL_HEADERS_DIR="build/kernel-headers"
+#    mkdir -p "$KERNEL_HEADERS_DIR"
+#    cd /path/to/linux-source
+#    make headers_install INSTALL_HDR_PATH="$KERNEL_HEADERS_DIR"
+pause
     mkdir -p /tmp/build
     cd /tmp/build
     wget http://ftp.gnu.org/gnu/libc/glibc-2.31.tar.gz
@@ -94,7 +101,7 @@ function build_glibc() {
     cd glibc-2.31
     mkdir -p ./build
     cd build
-    ../configure --prefix="/" --disable-multi-arch
+    ../configure --prefix="/" --disable-multi-arch #--with-headers="$KERNEL_HEADERS_DIR"
     make -j4
     make DESTDIR="/tmp/staging" install
 

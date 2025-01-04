@@ -25,7 +25,6 @@
         <module>java</module>
 
         <module>userland-java</module>
-        <module>starship-sdk-maven-plugin</module>
         <module>starship-sdk</module>
 
         <module>init</module>

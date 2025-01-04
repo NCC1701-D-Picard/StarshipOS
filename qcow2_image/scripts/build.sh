@@ -13,6 +13,14 @@ set -u
 BUILD_DIR="build"
 HDD_FILENAME="starship-os.qcow2"
 HDD_SIZE="40G"
+
+KERNEL="NCC1701-D"
+KERNEL_PATH="target/kernel/build/boot/$KERNEL"
+KERNEL_MODS="target/kernel/build/lib"
+GNU_TOOLS="target/gnu-tools-glibc/build/unified-system.tar.gz"
+INIT="target/init/target/init-0.1.0-SNAPSHOT.jar"
+BUNDLE_MGR="target/init-bundle-manager/target/init-bundle-manager-0.1.0-SNAPSHOT.jar"
+
 export ROOT_FILESYSTEM_MOUNTPOINT="$BUILD_DIR/rootfs"
 
 # Cleanup function
@@ -46,7 +54,7 @@ RAW_FILE="$BUILD_DIR/starship-os.raw"
 qemu-img convert -f qcow2 -O raw "$BUILD_DIR/$HDD_FILENAME" "$RAW_FILE"
 [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: $RAW_FILE not created"; exit 1; }
 # Attach raw image to a loopback device
-LOOP_DEVICE=$(sudo losetup --find --show --partscan "$RAW_FILE")
+export LOOP_DEVICE=$(sudo losetup --find --show --partscan "$RAW_FILE")
 }
 
 function setup_2() {
@@ -107,12 +115,14 @@ function create_init_script() {
 }
 
 function copy_to_boot() {
-  sudo cp -p "target/kernel/build/kernel/boot/starship" "$ROOT_FILESYSTEM_MOUNTPOINT/boot/starship"
-  [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: copying the kernel to /boot/starship"; cleanup; }
+  sudo cp -pv "$KERNEL_PATH" "$ROOT_FILESYSTEM_MOUNTPOINT/boot/$KERNEL"
+  [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: copying the kernel to /boot/$KERNEL"; cleanup; }
   sudo rm -rf "build/kernel/lib/modules/6.12.0/build" # <- Unneeded build artifact.
   log "Copy kernel modules to the boot partition"
-  sudo cp -rp "./target/kernel/build/kernel/lib" "$ROOT_FILESYSTEM_MOUNTPOINT/lib"
+  sudo cp -rp "$KERNEL_MODS" "$ROOT_FILESYSTEM_MOUNTPOINT"
   [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: copying the kernel modules to /boot/lib"; cleanup; }
+
+#  TODO We're going to have to handle building multiple grub.cfg depending on to be determined parameters.
   mkdir -p "$ROOT_FILESYSTEM_MOUNTPOINT/boot/grub"
   sudo cp "src/grub.cfg" "$ROOT_FILESYSTEM_MOUNTPOINT/boot/grub/grub.cfg"
 #  sed -i "s|root=[^ ]*|root=UUID=$ROOT_UUID|g" "$ROOT_FILESYSTEM_MOUNTPOINT/boot/grub/grub.cfg"
@@ -163,22 +173,21 @@ function create_symlink() {
 function copy_to_root() {
   create_filesystem
 
-# Add sSome linux tools & GLIBC
+# Add some linux tools & GLIBC
   local qcow2Home=$(pwd)
-  sudo cp -pv "target/gnu-tools-glibc/build/unified-rootfs.tar.gz" "$ROOT_FILESYSTEM_MOUNTPOINT"
-  cd "$ROOT_FILESYSTEM_MOUNTPOINT"
-  sudo tar xvf "unified-rootfs.tar.gz"
-  sudo rm "unified-rootfs.tar.gz"
-  cd "$qcow2Home"
-# OpenJDK23 @ /java
-  sudo cp -rp "target/java/build/jdk" "$ROOT_FILESYSTEM_MOUNTPOINT/java"; [ $? -eq 0 ] && echo "Working ..." || { log "ERROR"; cleanup; }
+
+  tar xvzf "target/gnu-tools-glibc/build/unified-system.tar.gz" -C "./target"
+  mv -v "bash-5.2" "$ROOT_FILESYSTEM_MOUNTPOINT/"
+pause
+
+#  sudo cp -rp "target/java/build/jdk" "$ROOT_FILESYSTEM_MOUNTPOINT/java"; [ $? -eq 0 ] && echo "Working ..." || { log "ERROR"; cleanup; }
 
 # Install the init system
   log "Installing Init system"
-  sudo mkdir -p "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/starship"
-  sudo cp "target/init/target/init-0.1.0-SNAPSHOT.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/starship/init.jar"
-  sudo ln -s "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/starship/init.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/sbin/init"
-  sudo cp "target/init-bundle-manager/target/init-bundle-manager-0.1.0-SNAPSHOT.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/starship/bundle-manager.jar"
+  sudo mkdir -p "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL"
+  sudo cp -pv "$INIT" "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/init.jar"
+  sudo ln -sv "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/init.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/sbin/init"
+  sudo cp -pv "$BUNDLE_MGR" "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/bundle-manager.jar"
   create_init_script
 }
 

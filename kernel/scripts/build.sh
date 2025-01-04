@@ -48,6 +48,9 @@ if [ ! -d "$BUILD_DIR" ]; then
 
     # Enter kernel directory
     cd "$KERNEL_SRC_DIR"
+
+    make headers_install INSTALL_HDR_PATH="build/kernel-headers"
+
     log "Building the Starship kernel in $KERNEL_SRC_DIR."
     make -j"$(nproc)" bzImage 2>&1 | tee -a "../module.log"
 

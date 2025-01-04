@@ -5,3 +5,8 @@
 /kernel/kernel.iml
 /*.iml
 /kernel/*.iml
+/.local/
+/.github/
+/.config/
+/.cache/
+/qcow2_image/module.log
