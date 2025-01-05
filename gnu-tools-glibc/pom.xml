@@ -13,6 +13,16 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>glibc</module>
+        <module>coreutils</module>
+        <module>util-linux</module>
+        <module>e2fsprogs</module>
+        <module>bash</module>
+    </modules>
+
     <artifactId>gnu-tools-glibc</artifactId>
 
     <properties>
@@ -20,123 +30,5 @@
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <!-- Execution for unpacking -->
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.starship</groupId>
-                                    <artifactId>kernel</artifactId>
-                                    <version>0.1.0-SNAPSHOT</version>
-                                    <classifier>kernel</classifier>
-                                    <type>tgz</type>
-                                    <outputDirectory>${project.build.directory}/kernel</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Compile -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <!-- Compile -->
-                    <execution>
-                        <id>make-and-install-gnu-tools-glibc</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>bash</executable>
-                            <arguments>
-                                <argument>-c</argument>
-                                <argument>scripts/build.sh</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- clean -->
-                    <execution>
-                        <id>clean-gnu-tools-glibc</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>bash</executable>
-                            <arguments>
-                                <argument>-c</argument>
-                                <argument>scripts/clean.sh</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Assemble -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <id>package-gnu-tools-glibc</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>gnu-tools-glibc.xml</descriptor>
-                            </descriptors>
-                            <formats>
-                                <format>tgz</format>
-                            </formats>
-                            <finalName>${project.artifactId}-${project.version}</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Attach -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-artifact</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>./target/${project.artifactId}-${project.version}-gnu-tools-glibc.tgz</file>
-                                    <type>tgz</type>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

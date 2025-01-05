@@ -84,30 +84,27 @@ function cleanup() {
 }
 
 ### Build Functions ###
-function build_glibc() {
-  log "********************************************************************************"
-  log "*                               Building glibc ...                             *"
-  log "********************************************************************************"
-
-    # Step 1: Install Kernel Headers (Ensure headers are prepared beforehand)
-#    KERNEL_HEADERS_DIR="build/kernel-headers"
-#    mkdir -p "$KERNEL_HEADERS_DIR"
-#    cd /path/to/linux-source
-#    make headers_install INSTALL_HDR_PATH="$KERNEL_HEADERS_DIR"
-    mkdir -p /tmp/build
-    cd /tmp/build
-    wget http://ftp.gnu.org/gnu/libc/glibc-2.31.tar.gz
-    tar -xvf glibc-2.31.tar.gz
-    cd glibc-2.31
-    mkdir -p ./build
-    cd build
-    ../configure --prefix="/" --disable-multi-arch #--with-headers="$KERNEL_HEADERS_DIR"
-    make -j4
-    make DESTDIR="/tmp/staging" install
-
-    cd /tmp/build
-    log "Finished building glibc."
-}
+#function build_glibc() {
+#  log "********************************************************************************"
+#  log "*                               Building glibc ...                             *"
+#  log "********************************************************************************"
+#    mkdir -p /tmp/build
+#    cd /tmp/build
+#    wget http://ftp.gnu.org/gnu/libc/glibc-2.31.tar.gz
+#    tar -xvf glibc-2.31.tar.gz
+#    cd glibc-2.31
+#    mkdir -p ./build
+#    cd build
+#    ../configure --prefix="/" --disable-multi-arch --with-headers="target/kernel/build/kernel-headers/include/include"
+#     make -j$(nproc)
+#    make DESTDIR="/tmp/staging" install
+#    ls /tmp/staging
+#pause
+#    cd /tmp/staging
+#    tar -cvpzf glibc-2.31.tar.gz .
+#    mv glibc-2.31.tar.gz ./build
+#    log "Finished building glibc."
+#}
 
 function build_e2fsprogs() {
     log "********************************************************************************"
@@ -189,7 +186,7 @@ function main() {
     mkdir -p /tmp/staging  # Always create the staging directory
 
     # Build all packages and install into a unified directory
-    build_glibc
+#    build_glibc
     build_util_linux
     build_coreutils
     build_e2fsprogs # Build BEFORE bash!

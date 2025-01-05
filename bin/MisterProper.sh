@@ -1,11 +1,6 @@
-#!/bin/bash
-
-#
-# Copyright (c) 2025.
-#
-
-cd "kernel/starship_kernel"
+#!/usr/bin/bash
+cd kernel/linux
+make defconfig
 make mrproper
 make defconfig
-cd "../../"
-
+exit 0
