@@ -60,8 +60,9 @@ find build -type l | while IFS= read -r symlink; do
         echo "Converted \"$symlink\" -> \"$relative_target\""
     fi
 done
+
 log "Build directory setup complete. Ready for Maven assembly."
-#cd "build"
+cd "build"
 tar -cvpzf "../$KERNEL_NAME.tgz" .
 mkdir -p "../target/staging"
 cp -v "$KERNEL_NAME.tgz" "../target/staging"

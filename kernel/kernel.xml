@@ -6,7 +6,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>staging</directory>
+            <directory>target/staging</directory>
             <includes>
                 <include>**/*</include>
             </includes>

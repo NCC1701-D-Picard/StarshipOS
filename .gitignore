@@ -11,3 +11,4 @@
 /.cache/
 /disk_images/*.log
 /gnu-tools-glibc/*.log
+/java/*.log
