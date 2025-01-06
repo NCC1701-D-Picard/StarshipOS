@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>coreutils</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -57,53 +58,53 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Assemble -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-assembly-plugin</artifactId>-->
-            <!--                <version>3.5.0</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>package-java</id>-->
-            <!--                        <phase>prepare-package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>single</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <descriptors>-->
-            <!--                                <descriptor>java.xml</descriptor>-->
-            <!--                            </descriptors>-->
-            <!--                            <formats>-->
-            <!--                                <format>tgz</format>-->
-            <!--                            </formats>-->
-            <!--                            <finalName>${project.artifactId}-${project.version}</finalName>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-            <!-- Attach -->
-            <!--            <plugin>-->
-            <!--                <groupId>org.codehaus.mojo</groupId>-->
-            <!--                <artifactId>build-helper-maven-plugin</artifactId>-->
-            <!--                <version>3.3.0</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>attach-artifact</id>-->
-            <!--                        <phase>package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>attach-artifact</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <artifacts>-->
-            <!--                                <artifact>-->
-            <!--                                    <file>./target/${project.artifactId}-${project.version}-java.tgz</file>-->
-            <!--                                    <type>tgz</type>-->
-            <!--                                </artifact>-->
-            <!--                            </artifacts>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>package-coreutils</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>coreutils.xml</descriptor>
+                            </descriptors>
+                            <formats>
+                                <format>tgz</format>
+                            </formats>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifact</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>./target/${project.artifactId}-${project.version}-coreutils.tgz</file>
+                                    <type>tgz</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

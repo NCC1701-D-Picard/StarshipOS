@@ -18,8 +18,6 @@ main() {
   if [ -d "$BUILD_DIR" ]; then
     log "Cleaning build directory: $BUILD_DIR"
     rm -rfv -- force "$BUILD_DIR"
-    rm -rfv --force "/tmp/build"
-    rm -rfv --force "/tmp/staging"
   else
     log "Build directory already exists. Will NOT rebuild."
   fi

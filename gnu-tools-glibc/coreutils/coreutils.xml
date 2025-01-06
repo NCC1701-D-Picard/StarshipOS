@@ -1,5 +1,5 @@
 <assembly>
-    <id>kernel</id>
+    <id>coreutils</id>
     <formats>
         <format>tgz</format>
     </formats>

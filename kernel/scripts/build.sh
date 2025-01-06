@@ -20,7 +20,7 @@ function log() {
 }
 
 log "Ensuring proper build directory structure."
-
+> module,log
 # Build steps (make modules, headers, kernel)
 if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p "$BUILD_DIR"
@@ -63,7 +63,7 @@ done
 
 log "Build directory setup complete. Ready for Maven assembly."
 cd "build"
-tar -cvpzf "../$KERNEL_NAME.tgz" .
-mkdir -p "../target/staging"
-cp -v "$KERNEL_NAME.tgz" "../target/staging"
-cat "./module.log" >> "../../build.log"
+tar -cvpzf "../$KERNEL_NAME.tgz" "./"
+cd "../"
+
+#cat "./module.log" >> "../../build.log"

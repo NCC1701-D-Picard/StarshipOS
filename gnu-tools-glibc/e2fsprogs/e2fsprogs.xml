@@ -1,5 +1,5 @@
 <assembly>
-    <id>kernel</id>
+    <id>e2fsprogs</id>
     <formats>
         <format>tgz</format>
     </formats>

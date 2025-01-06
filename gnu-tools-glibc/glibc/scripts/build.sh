@@ -21,6 +21,7 @@ function pause() {
 }
 
 function build_glibc() {
+  mkdir -p "$BUILD_DIR"
   sudo rm -rf "$TEMP_BUILD"
   sudo rm -rf "$TEMP_STAGING"
   mkdir -p /tmp/build
@@ -30,19 +31,18 @@ function build_glibc() {
   cd glibc-2.31
   mkdir -p ./build
   cd build
-  echo "$KERNEL_HEADERS"
-  echo "$MODULE_HOME"
-  pause
-  ../configure --prefix="/" --disable-multi-arch --with-headers="$BUILD_DIR/usr/include" --enable-kernel=6.12 libc_cv_have_selinux=no
-
+  ../configure --prefix="/" --disable-multi-arch
   make -j$(nproc)
   make DESTDIR="$TEMP_STAGING" install
-   ls "$TEMP_STAGING"
-pause
-#    cd /tmp/staging
-#    tar -cvpzf glibc-2.31.tar.gz .
-#    mv glibc-2.31.tar.gz /home/rajames/PROJECTS/StarshipOS/gnu-tools-glibc/glibc/build
-#    log "Finished building glibc."
+  if [ -n "$(find "$TEMP_STAGING" -mindepth 1)" ]; then
+    cd "$TEMP_STAGING"
+    tar -cvpzf "$TEMP_BUILD/glibc-2.31-1.46.5.tar.gz" .
+  else
+    log "Error: $TEMP_STAGING is empty. No archive will be created."
+  fi
+  cd "../"
+  mv "/tmp/build/glibc-2.31.tar.gz" "$MODULE_HOME/build/glibc-2.31.tgz"
+  cd "$MODULE_HOME"
 }
 
 main() {
@@ -52,7 +52,7 @@ main() {
 
   if [ ! -d "$BUILD_DIR" ]; then
     log "Creating build directory: $BUILD_DIR"
-#    mkdir -p "$BUILD_DIR"
+    mkdir -p "$BUILD_DIR"
     build_glibc
   else
     log "Build directory already exists. Will NOT rebuild."
