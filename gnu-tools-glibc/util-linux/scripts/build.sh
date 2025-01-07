@@ -41,7 +41,7 @@ function build_util_linux() {
   mkdir build
   cd build
 
-  ../configure --prefix=/usr --disable-nls --enable-static --enable-shared --disable-profile --enable-runtime-checks 2>&1 | tee -a "../module.log"
+  ../configure --prefix=$TEMP_STAGING/usr --disable-nls --enable-static --enable-shared --disable-profile --enable-runtime-checks 2>&1 | tee -a "../module.log"
 
   # shellcheck disable=SC2046
   make -j$(nproc) 2>&1 | tee -a "../module.log"

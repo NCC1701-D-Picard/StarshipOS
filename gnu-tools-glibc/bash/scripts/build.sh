@@ -28,7 +28,7 @@ function build_bash() {
   wget http://ftp.gnu.org/gnu/bash/bash-5.2.tar.gz
   tar -xvf bash-5.2.tar.gz
   cd bash-5.2
-  ./configure --prefix="/"
+  ./configure --prefix="$TEMP_STAGING"
   make -j$(nproc)
   make DESTDIR="/tmp/staging" install
   if [ -n "$(find "$TEMP_STAGING" -mindepth 1)" ]; then

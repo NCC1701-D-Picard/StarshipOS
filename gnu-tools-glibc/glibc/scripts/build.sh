@@ -41,7 +41,7 @@ function build_glibc() {
   cd glibc-2.31
   mkdir -p ./build
   cd build
-  ../configure --prefix="/" --disable-multi-arch
+  ../configure --prefix="$TEMP_STAGING/" --disable-multi-arch
   # shellcheck disable=SC2046
   make -j$(nproc)
   sudo make DESTDIR="$TEMP_STAGING" install

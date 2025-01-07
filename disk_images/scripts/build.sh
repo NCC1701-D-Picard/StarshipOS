@@ -156,7 +156,7 @@ function install_system() {
   # Install kernel
 pause
   log "Installing kernel"
-  sudo tar xvf "target/kernel-0.1.0-SNAPSHOT-kernel.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
+  sudo tar xvf "target/kernel/build/NCC1701-D.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
   install_grub
 pause
   # Install bash

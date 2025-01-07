@@ -28,7 +28,7 @@ function build_coreutils() {
     wget http://ftp.gnu.org/gnu/coreutils/coreutils-9.2.tar.xz
     tar -xvf coreutils-9.2.tar.xz
     cd coreutils-9.2
-    ./configure --prefix="/"
+    ./configure --prefix="$TEMP_STAGING/"
     make -j$(nproc)
     make DESTDIR="/tmp/staging" install
   if [ -n "$(find "$TEMP_STAGING" -mindepth 1)" ]; then
