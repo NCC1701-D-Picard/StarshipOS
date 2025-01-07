@@ -27,13 +27,13 @@ fi
 
 # Start the Java-based Init system
 echo "Launching StarshipOS Init..."
-exec /bin/bash
+#exec /bin/bash
 #KERNEL_CMDLINE=$(cat /proc/cmdline)
-#if [[ "$KERNEL_CMDLINE" == *"--debug"* ]]; then
-#    echo "Debug mode enabled. Starting with remote debugger on port 5005..." >> /dev/console
-#    exec /java/bin/java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 -jar /sbin/init.jar
-#else
-#    echo "Starting without debugger..." >> /dev/console
-#    exec /java/bin/java -jar /sbin/init.jar
-#fi
+if [[ "$KERNEL_CMDLINE" == *"--debug"* ]]; then
+    echo "Debug mode enabled. Starting with remote debugger on port 5005..." >> /dev/console
+    exec /java/bin/java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 -jar /sbin/init.jar
+else
+    echo "Starting without debugger..." >> /dev/console
+    exec /java/bin/java -jar /sbin/init.jar
+fi
 

@@ -17,7 +17,7 @@ main() {
 
   if [ -d "$BUILD_DIR" ]; then
     log "Cleaning build directory: $BUILD_DIR"
-    rm -rfv -- force "$BUILD_DIR"
+#    rm -rfv -- force "$BUILD_DIR"
   else
     log "Build directory already exists. Will NOT rebuild."
   fi

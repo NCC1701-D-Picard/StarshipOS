@@ -36,9 +36,19 @@ function log() {
 }
 
 function pause() {
-  echo "Paused, press [ENTER] to continue..."
-  # shellcheck disable=SC2162
-  read -p "x"
+  echo "Paused. Press [ENTER] to continue or [c] to open a shell..."
+
+  # Read a single key from user input
+  read -n1 -r key
+
+  if [[ $key == "c" ]]; then
+    echo -e "\nOpening a subshell. Type 'exit' to return."
+    # Open a subshell
+    bash
+    echo "Returning from subshell..."
+  fi
+
+  # Pressing any other key (or ENTER) will continue the script
 }
 
 function create_filesystem() {
@@ -116,27 +126,17 @@ function setup() {
 
 function create_init_script() {
   sudo cp -p "src/init" "$ROOT_FILESYSTEM_MOUNTPOINT/init"
-
   sudo chmod +x "$ROOT_FILESYSTEM_MOUNTPOINT/init"
   sudo chown root:root "$ROOT_FILESYSTEM_MOUNTPOINT/init"
 }
 
-function install_kernel() {
-  log "Copy Linux kernel NCC1701-D to the boot partition."
+function install_grub() {
   sudo mkdir -p "$ROOT_FILESYSTEM_MOUNTPOINT/boot/grub"
-pause
-  sudo cp -pv "$KERNEL_PATH" "$ROOT_FILESYSTEM_MOUNTPOINT/boot"; [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: copying the kernel to /boot/$KERNEL"; cleanup; }
-  sudo rm -rf "build/kernel/lib/modules/6.12.0/build" # <- Unneeded build artifact.
-  log "Copy Linux kernel modules to the boot partition."
-  sudo cp -rpv "$KERNEL_MODS" "$ROOT_FILESYSTEM_MOUNTPOINT"; [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: copying the kernel modules to /boot/lib"; cleanup; }
-
-#  TODO We're going to have to handle building multiple grub.cfg depending on to be determined parameters.
+# TODO We're going to have to handle building multiple grub.cfg depending on to be determined parameters.
   sudo cp -v "src/grub.cfg" "$ROOT_FILESYSTEM_MOUNTPOINT/boot/grub/grub.cfg"
   log "Installing GRUB..."
   sudo grub-install --target=i386-pc --boot-directory="$ROOT_FILESYSTEM_MOUNTPOINT/boot" "$LOOP_DEVICE"; [ $? -eq 0 ] && echo "Working ..." || { log "ERROR: installing GRUB"; cleanup; }
-  log "kernel installed"
 }
-
 
 function create_symlink() {
     local target="$1"
@@ -152,22 +152,40 @@ function create_symlink() {
 function install_system() {
   # Add some linux tools & GLIBC
   local qcow2Home="$(pwd)"
-  tar xvzf "$(pwd)/target/gnu-tools-glibc/build/unified-system.tar.gz" -C "target/"
+
+  # Install kernel
+pause
+  log "Installing kernel"
+  sudo tar xvf "target/kernel-0.1.0-SNAPSHOT-kernel.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
+  install_grub
+pause
+  # Install bash
+  log "Installing bash"
+  sudo tar xvf "target/bash/build/bash-5.2.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
+pause
+  # Install coreutils
+  log "Installing coreutils"
+  sudo tar xvf "target/coreutils/build/coreutils-9.2.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
+pause
+  # Install util-linux
+  log "Installing util-linux"
+  sudo tar xvf "target/util-linux-0.1.0-SNAPSHOT-util-linux.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
+pause
   # Install glibc
   log "Installing glibc"
+  sudo tar xvf "target/glibc/build/glibc-2.31.tgz" -C "$ROOT_FILESYSTEM_MOUNTPOINT"
 pause
-
-
   log "Installing Java OpenJDK (23)"
-  sudo cp -rpv "target/java/build/jdk" "$ROOT_FILESYSTEM_MOUNTPOINT/java"; [ $? -eq 0 ] && echo "Working ..." || { log "ERROR"; cleanup; }
+  sudo cp -rpv "target/java/build/jdk" "$ROOT_FILESYSTEM_MOUNTPOINT/java"
+pause
 
   # Install the JVM (Init.groovy) init system
   log "Installing the JVM Init system."
   sudo mkdir -p "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL"
   sudo cp -pv "$INIT" "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/init.jar"
-#  sudo ln -sv "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/init.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/sbin/init"
+  sudo ln -sv "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/init.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/sbin/init"
   sudo cp -pv "$BUNDLE_MGR" "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/bundle-manager.jar"
-#  sudo ln -sv "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/bundle-manager.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/sbin/bundle-manager"
+  sudo ln -sv "$ROOT_FILESYSTEM_MOUNTPOINT/var/lib/$KERNEL/bundle-manager.jar" "$ROOT_FILESYSTEM_MOUNTPOINT/sbin/bundle-manager"
   create_init_script
 }
 
@@ -185,27 +203,15 @@ function teardown() {
   rm -f "$RAW_FILE"
 }
 
-if [ ! -d build ]; then
-
-  # Create disk image file. loopback device.
-  setup
-
-  # Copy kernel to device
-  install_kernel
-
-  # Populate the drive
-  install_system
-
-  # Write the Init Script
-  create_init_script
-
-#  create_symlink "/lib/x86_64-linux-gnu/librt-2.31.so" "/lib/x86_64-linux-gnu/librt.so.1"
-#  create_symlink "/lib/x86_64-linux-gnu/libm.so" "/lib/x86_64-linux-gnu/libm.so.6"
-
-  # Unmount the filesystem
-  teardown
+function main() {
+  if [ ! -d build ]; then
+    setup               # Create disk image file. loopback device.
+    install_system      # Populate the drive
+    create_init_script  # Write the Init Script
+    teardown            # Unmount the filesystem
 else
   log "Nothing to do"
 fi
-cat "../module.log" >> "../../build.log"
-log "Disk setup with bootloader and root filesystem completed successfully."
+}
+
+main "$@"

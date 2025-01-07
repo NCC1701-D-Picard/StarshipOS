@@ -5,8 +5,8 @@ set -e  # Exit immediately if a command exits with a non-zero status
 set -u  # Treat unset variables as an error
 
 MODULE_HOME=$(pwd)
-BUILD_DIR="build"
-KERNEL_HEADERS="$(pwd)/target/kernel/build/usr"
+BUILD_DIR="$MODULE_HOME/build"
+#KERNEL_HEADERS="$MODULE_HOME/target/kernel/build/usr"
 TEMP_BUILD="/tmp/build"
 TEMP_STAGING="/tmp/staging"
 
@@ -15,9 +15,19 @@ function log() {
 }
 
 function pause() {
-  echo "Paused, press [ENTER] to continue..."
-  # shellcheck disable=SC2162
-  read -p "x"
+  echo "Paused. Press [ENTER] to continue or [c] to open a shell..."
+
+  # Read a single key from user input
+  read -n1 -r key
+
+  if [[ $key == "c" ]]; then
+    echo -e "\nOpening a subshell. Type 'exit' to return."
+    # Open a subshell
+    bash
+    echo "Returning from subshell..."
+  fi
+
+  # Pressing any other key (or ENTER) will continue the script
 }
 
 function build_glibc() {
@@ -32,17 +42,25 @@ function build_glibc() {
   mkdir -p ./build
   cd build
   ../configure --prefix="/" --disable-multi-arch
+  # shellcheck disable=SC2046
   make -j$(nproc)
-  make DESTDIR="$TEMP_STAGING" install
+  sudo make DESTDIR="$TEMP_STAGING" install
   if [ -n "$(find "$TEMP_STAGING" -mindepth 1)" ]; then
-    cd "$TEMP_STAGING"
-    tar -cvpzf "$TEMP_BUILD/glibc-2.31-1.46.5.tar.gz" .
-  else
-    log "Error: $TEMP_STAGING is empty. No archive will be created."
+    log "Creating tarball for Glibc installation from staging directory: $TEMP_STAGING"
+    # Ensure $BUILD_DIR exists
+    mkdir -p "$BUILD_DIR"
+    # Create a tarball that compresses the contents of $TEMP_STAGING
+    tar -cpvzf "$BUILD_DIR/glibc-2.31.tgz" -C "$TEMP_STAGING" .
+    # Check if the tarball was successfully created
+    if [ -f "$BUILD_DIR/glibc-2.31.tgz" ]; then
+      log "Tarball successfully created at $BUILD_DIR/glibc-2.31.tgz."
+    else
+    log "Error: Failed to create Glibc tarball."
   fi
-  cd "../"
-  mv "/tmp/build/glibc-2.31.tar.gz" "$MODULE_HOME/build/glibc-2.31.tgz"
-  cd "$MODULE_HOME"
+else
+  log "Error: Staging directory $TEMP_STAGING is empty. Aborting tarball creation."
+fi
+cd "$MODULE_HOME"
 }
 
 main() {
@@ -57,6 +75,7 @@ main() {
   else
     log "Build directory already exists. Will NOT rebuild."
   fi
+
   log "********************************************************************************"
   log "*                              Finished building glibc ...                     *"
   log "********************************************************************************"

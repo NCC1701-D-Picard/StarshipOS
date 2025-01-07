@@ -6,7 +6,7 @@ set -u  # Treat unset variables as an error
 
 MODULE_HOME=$(pwd)
 BUILD_DIR="$MODULE_HOME/build"
-KERNEL_HEADERS="$MODULE_HOME/target/kernel/build/usr"
+KERNEL_HEADERS="MODULE_HOME/target/kernel/build/usr"
 TEMP_BUILD="/tmp/build"
 TEMP_STAGING="/tmp/staging"
 

@@ -5,8 +5,8 @@ set -e  # Exit immediately if a command exits with a non-zero status
 set -u  # Treat unset variables as an error
 
 MODULE_HOME=$(pwd)
-BUILD_DIR="build"
-KERNEL_HEADERS="$(pwd)/target/kernel/build/usr"
+BUILD_DIR="$MODULE_HOME/build"
+#KERNEL_HEADERS="MODULE_HOME/target/kernel/build/usr"
 TEMP_BUILD="/tmp/build"
 TEMP_STAGING="/tmp/staging"
 
@@ -15,9 +15,19 @@ function log() {
 }
 
 function pause() {
-  echo "Paused, press [ENTER] to continue..."
-  # shellcheck disable=SC2162
-  read -p "x"
+  echo "Paused. Press [ENTER] to continue or [c] to open a shell..."
+
+  # Read a single key from user input
+  read -n1 -r key
+
+  if [[ $key == "c" ]]; then
+    echo -e "\nOpening a subshell. Type 'exit' to return."
+    # Open a subshell
+    bash
+    echo "Returning from subshell..."
+  fi
+
+  # Pressing any other key (or ENTER) will continue the script
 }
 
 function build_util_linux() {
@@ -28,20 +38,15 @@ function build_util_linux() {
   wget https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.39/util-linux-2.39.1.tar.gz
   tar -xvf util-linux-2.39.1.tar.gz
   cd util-linux-2.39.1
-  ./configure --prefix="/" 2>&1 | tee -a "../module.log"
+  mkdir build
+  cd build
+
+  ../configure --prefix=/usr --disable-nls --enable-static --enable-shared --disable-profile --enable-runtime-checks 2>&1 | tee -a "../module.log"
+
   # shellcheck disable=SC2046
   make -j$(nproc) 2>&1 | tee -a "../module.log"
-  make -j$(nproc)
   sudo make install
-  if [ -n "$(find "$TEMP_STAGING" -mindepth 1)" ]; then
-    cd "$TEMP_STAGING"
-    tar -cvpzf "$TEMP_BUILD/util-linux-2.39.1.tar.gz" .
-  else
-    log "Error: $TEMP_STAGING is empty. No archive will be created."
-  fi
-  cd "../"
-  mv "/tmp/build/util-linux-2.39.1.tar.gz" "$MODULE_HOME/build/util-linux-2.39.1.tgz"
-  cd "$MODULE_HOME"
+  tar -cvpzf "$BUILD_DIR/util-linux-2.39.1.tgz" -C /tmp/build/util-linux-2.39.1/build . --transform='s,^,sbin/,'
 }
 
 main() {
@@ -56,6 +61,7 @@ main() {
   else
     log "Build directory already exists. Will NOT rebuild."
   fi
+
   log "********************************************************************************"
   log "*                             Building linux-util ...                          *"
   log "********************************************************************************"

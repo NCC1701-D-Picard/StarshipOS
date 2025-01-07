@@ -5,8 +5,8 @@ set -e  # Exit immediately if a command exits with a non-zero status
 set -u  # Treat unset variables as an error
 
 MODULE_HOME=$(pwd)
-BUILD_DIR="build"
-KERNEL_HEADERS="$(pwd)/target/kernel/build/usr"
+BUILD_DIR="$MODULE_HOME/build"
+#KERNEL_HEADERS="$MODULE_HOME/target/kernel/build/usr"
 TEMP_BUILD="/tmp/build"
 TEMP_STAGING="/tmp/staging"
 
@@ -33,8 +33,6 @@ function build_bash() {
   make DESTDIR="/tmp/staging" install
   if [ -n "$(find "$TEMP_STAGING" -mindepth 1)" ]; then
     cd "$TEMP_STAGING"
-    ls -al
-pause
     tar -cvpzf "$TEMP_BUILD/bash-5.2.tar.gz" .
   else
     log "Error: $TEMP_STAGING is empty. No archive will be created."

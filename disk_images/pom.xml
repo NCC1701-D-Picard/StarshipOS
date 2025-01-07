@@ -70,19 +70,52 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.starship</groupId>
-                                    <artifactId>gnu-tools-glibc</artifactId>
-                                    <version>0.1.0-SNAPSHOT</version>
-                                    <type>tgz</type>
-                                    <classifier>gnu-tools-glibc</classifier>
-                                    <outputDirectory>./target/gnu-tools-glibc</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.starship</groupId>
                                     <artifactId>init</artifactId>
                                     <version>0.1.0-SNAPSHOT</version>
                                     <classifier>init</classifier>
                                     <type>tgz</type>
                                     <outputDirectory>${project.build.directory}/init</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>glibc</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>glibc</classifier>
+
+                                    <outputDirectory>./target/glibc</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>coreutils</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>coreutils</classifier>
+                                    <outputDirectory>./target/coreutils</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>util-linux</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>util-linux</classifier>
+                                    <outputDirectory>./target/util-linux</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>e2fsprogs</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>e2fsprogs</classifier>
+                                    <outputDirectory>./target/e2fsprogs</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.starship</groupId>
+                                    <artifactId>bash</artifactId>
+                                    <version>0.1.0-SNAPSHOT</version>
+                                    <type>tgz</type>
+                                    <classifier>bash</classifier>
+                                    <outputDirectory>./target/bash</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -124,54 +157,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Assemble -->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-assembly-plugin</artifactId>-->
-<!--                <version>3.5.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>package-qcow2</id>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>single</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <descriptors>-->
-<!--                                <descriptor>qcow2.xml</descriptor>-->
-<!--                            </descriptors>-->
-<!--                            <formats>-->
-<!--                                <format>tgz</format>-->
-<!--                            </formats>-->
-<!--                            <finalName>${project.artifactId}-${project.version}</finalName>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-            <!-- Attach -->
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>build-helper-maven-plugin</artifactId>-->
-<!--                <version>3.3.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>attach-artifact</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>attach-artifact</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <artifacts>-->
-<!--                                <artifact>-->
-<!--                                    <file>./target/${project.artifactId}-${project.version}-qcow2.tgz</file>-->
-<!--                                    <type>tgz</type>-->
-<!--                                    <classifier>qcow2</classifier>-->
-<!--                                </artifact>-->
-<!--                            </artifacts>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>

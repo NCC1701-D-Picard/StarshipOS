@@ -1,20 +1,5 @@
 #!/bin/bash
 
-#
-# /*
-#  * Copyright (c) ${YEAR}.
-#  *
-#  * Project Name: StarshipOS
-#  * Developed by: ${USER}
-#  *
-#  * Licensed under the terms and conditions described in the project documentation.
-#  *
-#  * File Name: ${NAME}
-#  * Created Date: ${DATE}
-#  * Author: ${USER}
-#  */
-#
-
 # Exit on errors and unset variables
 set -e
 set -u
@@ -25,8 +10,9 @@ clear
 UBER_CLEAN=0
 DEBUG=0
 LOG_FILE="build.log"
-MODULE_PATHS=( "userland-java" "kernel" "gnu-tools-glibc" "init" "qcow2_image" "init-bundle-manager" "java" "starship-sdk") # "grub" "initramfs"
-ALWAYS_REBUILD=( "qcow2_image" )  # These are always rebuilt, directories always removed "grub" "initramfs"
+
+MODULE_PATHS=( "userland-java" "kernel" "gnu-tools-glibc" "gnu-tools-glibc/glibc" "gnu-tools-glibc/util-linux" "gnu-tools-glibc/coreutils" "gnu-tools-glibc/e2fsprogs" "gnu-tools-glibc/bash" "init" "qcow2_image" "init-bundle-manager" "java" "starship-sdk") # "grub" "initramfs"
+ALWAYS_REBUILD=( "disk_images" )  # These are always rebuilt.
 
 # Help/usage function
 usage() {
@@ -80,7 +66,7 @@ uber_clean_modules() {
 
 # Always clean the "always rebuilt" modules
 clean_always_rebuilt_modules() {
-    echo "Cleaning always-rebuilt modules (grub, initramfs, and qcow2_image)..."
+    echo "Cleaning always-rebuilt modules (disk_image)..."
     for module in "${ALWAYS_REBUILD[@]}"; do
         clean_module "$module"
     done

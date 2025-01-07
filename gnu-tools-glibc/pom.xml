@@ -19,7 +19,7 @@
         <module>glibc</module>
         <module>coreutils</module>
         <module>util-linux</module>
-        <module>e2fsprogs</module>
+<!--        <module>e2fsprogs</module>-->
         <module>bash</module>
     </modules>
 
